@@ -1,7 +1,9 @@
-let operator = false;
+let operator = "inactive";
 let result = "0";
-let operatorValue = "none";
-let operand1 = "none";
+let operand1 = 0;
+let operand2 = "none";
+let operatorId = 0;
+
 calculate();
 
 
@@ -17,6 +19,11 @@ makeBtnWork(nine);
 makeBtnWork(zero);
 
 ac.addEventListener("click", () => {
+    operator = "inactive";
+    result = "0";
+    operand1 = 0;
+    operand2 = "none";
+    operatorId = 0;
     result = 0;
     calculate()
 });
@@ -31,113 +38,203 @@ function calculate() {
 
 function makeBtnWork(btn) {
     btn.addEventListener("click", (e) => {
-        if (result == 0 || operator == true) {
+        //console.log((operator));
+        if (result == 0) {
             result = btn.textContent;
-            operator = false;
             
-        } else if (result != 0) {
+        } else if (result == "none"){
+            result = 0 + Number(btn.textContent);
+        }
+         else if (result != 0) {
             result = result + btn.textContent;
         };
         calculate();
     });   
 };
 
-plus.addEventListener("click", () => {
-    operator = true;
-    operatorValue = "add"
-    operand1 = result;
+plus.addEventListener("click", (e) =>{
+    operatorId = e.target.id;
+    if (operator == "active" && result == "none") {
+        //console.log("@")
+        
+    } else if (operator == "active" && result != "none") {
+        operand2 = result;
+        result = add(operand1, operand2);
+        calculate();
+        operator = "inactive";
 
+    } else if (operator == "inactive") {
+        operator = "active";
+        operand1 = result;
+        result = "none";
+
+    }
+
+    //console.log(operand1);
+    //console.log(operand2);
+    
 });
 
-minus.addEventListener("click", () => {
-    operator = true;
-    operatorValue = "minus"
-    operand1 = result;
+minus.addEventListener("click", (e) =>{
 
-});
+    operatorId = e.target.id;
 
-multiply.addEventListener("click", () => {
-    operator = true;
-    operatorValue = "product"
-    operand1 = result;
+    if (operator == "active" && result == "none") {
+        console.log("@")
+        
+    } else if (operator == "active" && result != "none") {
+        operand2 = result;
+        result = subtract(operand1, operand2);
+        calculate();
+        operator = "inactive";
 
-});
+    } else if (operator == "inactive") {
+        operator = "active";
+        operand1 = result;
+        result = "none";
 
-
-divide.addEventListener("click", () => {
-    operator = true;
-    operatorValue = "divide";
-    operand1 = result;
-
-});
-
-percentage.addEventListener("click", () => {
-    operand1 = result;
-    operand2 = 100;
-    result = (Number(operand1)/ Number(operand2));
-    calculate()
-});
-
-sqRoot.addEventListener("click", () => {
-    operand1 = result;
-    result = (Math.sqrt(operand1)).toFixed(2);
-    calculate()
+    }
+    console.log(result);
+    console.log(operand1);
+    console.log(operand2);
+    
 });
 
 equals.addEventListener("click", () => {
-    
-    let operand2 = result;
+    operand2 = calcResult.textContent;
+    console.log((operatorId));
+    // minus button id is 11
+    if (parseInt(operatorId) == 11 && operator == "active") {
+        result = subtract(operand1, result);
+        calculate();
+        operator = "inactive";
+        operand1 = 0;
+        operand2 = "none";
+    } else if (parseInt(operatorId) == 15 && operator == "active") {     
+        // plus btn id is 15
 
-    console.log(`operand2 - ${operand2}`);
-    console.log(`operand1 - ${operand1}`);
-    console.log(`result - ${result}`);
-    console.log(`operator - ${operatorValue}`);
-    
-    if (operatorValue === "add") {
-        result = add(Number(operand1), Number(operand2));
-        calculate()   
-    } else if (operatorValue ==="minus"){
-        result = subtract(Number(operand1), Number(operand2));
-        calculate()   
-    } else if (operatorValue === "product") {
-        result = product(Number(operand1), Number(operand2));
-        calculate()
-    } else if (operatorValue === "divide") {
-        if (Number(operand1)=== 0 && Number(operand2) === 0) {
-            result = "HENTAI"
-            calculate()
-            result = 0
-            return
-        }
-        result = divideAbyB(Number(operand1), Number(operand2));
-        calculate()
-    };
+        result = add(operand1, result);
+        calculate();
+        operator = "inactive";
+        operand1 = 0;
+        operand2 = "none";
+        console.log(result);
+
+    } else if (parseInt(operatorId) == 7 && operator == "active") {     
+        // multiply btn id is 7
+
+        result = product(operand1, result);
+        calculate();
+        operator = "inactive";
+        operand1 = 0;
+        operand2 = "none";
+        console.log(result);
+
+    } else if (parseInt(operatorId) == 3 && operator == "active") {     
+        // divide btn id is 3
+
+        result = divideAbyB(operand1, result);
+        calculate();
+        operator = "inactive";
+        operand1 = 0;
+        operand2 = "none";
+        console.log(result);
+
+    }
+
 
 });
+
+multiply.addEventListener("click", (e) =>{
+    operatorId = e.target.id;
+    if (operator == "active" && result == "none") {
+        console.log("@")
+        
+    } else if (operator == "active" && result != "none") {
+        operand2 = result;
+        result = product(operand1, operand2);
+        calculate();
+        operator = "inactive";
+
+    } else if (operator == "inactive") {
+        operator = "active";
+        operand1 = result;
+        result = "none";
+
+    }
+
+    console.log(operand1);
+    console.log(operand2);
+    
+});
+
+divide.addEventListener("click", (e) =>{
+
+    operatorId = e.target.id;
+
+    if (operator == "active" && result == "none") {
+        console.log("@")
+        
+    } else if (operator == "active" && result != "none") {
+        operand2 = result;
+        result = divideAbyB(operand1, operand2);
+        calculate();
+        operator = "inactive";
+
+    } else if (operator == "inactive") {
+        operator = "active";
+        operand1 = result;
+        result = "none";
+
+    };
+    
+});
+
+
 
 
 
 function add() {
-    num1 = arguments[0];
-    num2 = arguments[1];
+    num1 = Number(arguments[0]);
+    num2 = Number(arguments[1]);
     return (num1 + num2);
 }
 
 function subtract() {
-    num1 = arguments[0];
-    num2 = arguments[1];
+    num1 = Number(arguments[0]);
+    num2 = Number(arguments[1]);
     return (num1 - num2);
 }
 
 function product() {
-    num1 = arguments[0];
-    num2 = arguments[1];
+    num1 = Number(arguments[0]);
+    num2 = Number(arguments[1]);
     return (num1 * num2);
 }
 
 
 function divideAbyB() {
-    num1 = arguments[0];
-    num2 = arguments[1];
+    num1 = Number(arguments[0]);
+    num2 = Number(arguments[1]);
     return (num1 / num2);
 }
+
+function centage() {
+    num1 = Number(arguments[0]);
+    num2 = 100;
+    return divideAbyB(num1, num2)
+}
+
+
+function percentage() {
+    operand1 = result(result);
+    operand2 = 100;
+    result = (Number(operand1)/ Number(operand2));
+    calculate()
+};
+
+function sqRoot() {
+    operand1 = result;
+    result = (Math.sqrt(operand1)).toFixed(2);
+    calculate()
+};
